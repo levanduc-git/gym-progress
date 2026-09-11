@@ -105,12 +105,20 @@ export function setActiveProgramId(id: string): void {
   safeSetItem(STORAGE_KEYS.ACTIVE_PROGRAM_ID, id);
 }
 
+const EXERCISE_VERSION_KEY = 'gym_progress_exercise_seed_v2_svg';
+
 // 4. Exercises
 export function getStoredExercises(): Exercise[] {
   const exercises = safeGetItem<Exercise[]>(STORAGE_KEYS.EXERCISES, []);
-  if (exercises.length === 0) {
-    saveStoredExercises(SEED_EXERCISES);
-    return SEED_EXERCISES;
+  const isUpgraded = safeGetItem<boolean>(EXERCISE_VERSION_KEY, false);
+
+  if (exercises.length === 0 || !isUpgraded) {
+    // Merge custom user-created exercises with newly upgraded seed exercises
+    const customExercises = exercises.filter(e => e.isCustom);
+    const updatedExercises = [...SEED_EXERCISES, ...customExercises];
+    saveStoredExercises(updatedExercises);
+    safeSetItem(EXERCISE_VERSION_KEY, true);
+    return updatedExercises;
   }
   return exercises;
 }

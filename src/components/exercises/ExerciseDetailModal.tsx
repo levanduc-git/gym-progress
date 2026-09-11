@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { Exercise } from '../../db/schema';
+import { ImagePickerModal } from './ImagePickerModal';
 import { 
   X, 
   Dumbbell, 
@@ -10,7 +11,9 @@ import {
   Trophy, 
   TrendingUp, 
   Plus, 
-  Flame 
+  Flame,
+  Camera,
+  Image as ImageIcon
 } from 'lucide-react';
 import { getMuscleSvgFallback } from '../../utils/imageProvider';
 import { calculateEstimated1RM } from '../../utils/calculations';
@@ -26,12 +29,33 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
   onClose, 
   onAddToWorkout 
 }) => {
-  const { profile, sessions, personalRecords, activeSession, addExerciseToSession } = useApp();
+  const { profile, sessions, personalRecords, activeSession, addExerciseToSession, updateExercise, showToast } = useApp();
   const [activeTab, setActiveTab] = useState<'instructions' | 'history'>('instructions');
   const [imageError, setImageError] = useState<boolean>(false);
+  const [isImagePickerOpen, setIsImagePickerOpen] = useState<boolean>(false);
 
   const primaryImage = exercise.images[0];
   const fallbackSvg = getMuscleSvgFallback(exercise.primaryMuscle);
+
+  const handleSaveNewImage = (newImageUrl: string) => {
+    const updatedExercise: Exercise = {
+      ...exercise,
+      images: [
+        {
+          id: `img_${Date.now()}`,
+          url: newImageUrl,
+          thumbnailUrl: newImageUrl,
+          fallbackSvg,
+          type: newImageUrl.startsWith('data:image/svg') ? 'svg' : 'image',
+          provider: 'custom',
+          altText: exercise.name,
+        }
+      ]
+    };
+    updateExercise(updatedExercise);
+    setImageError(false);
+    showToast({ type: 'success', title: `Đã cập nhật hình ảnh cho bài ${exercise.name}!` });
+  };
 
   // Extract personal history for this exercise
   const exerciseSets = sessions
@@ -84,13 +108,24 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
           {/* Gradient Overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-dark-900 via-transparent to-black/60" />
 
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 w-9 h-9 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur hover:bg-black"
-          >
-            <X className="w-5 h-5" />
-          </button>
+          {/* Action Buttons Top Right (Close & Change Image) */}
+          <div className="absolute top-4 right-4 flex items-center space-x-2">
+            <button
+              onClick={() => setIsImagePickerOpen(true)}
+              className="px-3 py-1.5 rounded-full bg-dark-900/80 border border-white/20 text-white flex items-center space-x-1.5 backdrop-blur hover:bg-dark-800 text-xs font-bold shadow-lg"
+              title="Đổi hình ảnh minh họa"
+            >
+              <Camera className="w-3.5 h-3.5 text-primary-400" />
+              <span>Đổi hình</span>
+            </button>
+
+            <button
+              onClick={onClose}
+              className="w-8 h-8 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center backdrop-blur hover:bg-black"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
 
           {/* Title on Image */}
           <div className="absolute bottom-3 left-4 right-4">
@@ -288,6 +323,15 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
           </div>
         )}
       </div>
+
+      {/* Image Picker Modal */}
+      {isImagePickerOpen && (
+        <ImagePickerModal
+          exercise={exercise}
+          onSaveImage={handleSaveNewImage}
+          onClose={() => setIsImagePickerOpen(false)}
+        />
+      )}
     </div>
   );
 };

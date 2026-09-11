@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
-import { MuscleGroup, EquipmentType, DifficultyLevel } from '../../db/schema';
+import { MuscleGroup, EquipmentType, DifficultyLevel, Exercise } from '../../db/schema';
 import { X, Plus, Image as ImageIcon, Save, Dumbbell } from 'lucide-react';
-import { createExerciseImages } from '../../utils/imageProvider';
+import { createExerciseImages, generateAccurateExerciseSvg } from '../../utils/imageProvider';
+import { ImagePickerModal } from './ImagePickerModal';
 
 interface CustomExerciseModalProps {
   onClose: () => void;
@@ -19,6 +20,7 @@ export const CustomExerciseModal: React.FC<CustomExerciseModalProps> = ({ onClos
   const [instructionText, setInstructionText] = useState<string>('');
   const [customImageUrl, setCustomImageUrl] = useState<string>('');
   const [tipsText, setTipsText] = useState<string>('');
+  const [isPickerOpen, setIsPickerOpen] = useState<boolean>(false);
 
   const muscles: MuscleGroup[] = ['Chest', 'Back', 'Shoulders', 'Legs', 'Biceps', 'Triceps', 'Core', 'Forearms', 'Calves'];
   const equipments: EquipmentType[] = ['Barbell', 'Dumbbell', 'Cable', 'Machine', 'Bodyweight', 'Smith Machine', 'Kettlebell', 'Other'];
@@ -182,18 +184,46 @@ export const CustomExerciseModal: React.FC<CustomExerciseModalProps> = ({ onClos
             </div>
           </div>
 
-          {/* Image URL (Optional) */}
+          {/* Image Selection / Custom Upload */}
           <div>
-            <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider mb-1">
-              Link hình ảnh minh họa (Tùy chọn)
-            </label>
-            <input
-              type="url"
-              value={customImageUrl}
-              onChange={(e) => setCustomImageUrl(e.target.value)}
-              placeholder="https://images.unsplash.com/..."
-              className="w-full px-3 py-2 rounded-xl bg-dark-850 border border-white/10 text-white focus:outline-none focus:border-primary-500"
-            />
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-[11px] font-bold text-gray-300 uppercase tracking-wider">
+                Hình ảnh minh họa
+              </label>
+              <button
+                type="button"
+                onClick={() => setIsPickerOpen(true)}
+                className="text-xs font-bold text-primary-400 hover:underline flex items-center space-x-1"
+              >
+                <ImageIcon className="w-3.5 h-3.5" />
+                <span>Chọn từ thư viện mẫu / Tải lên</span>
+              </button>
+            </div>
+
+            {customImageUrl ? (
+              <div className="relative w-full h-32 rounded-xl bg-dark-950 border border-primary-500/50 overflow-hidden flex items-center justify-center p-2 group">
+                <img
+                  src={customImageUrl}
+                  alt="Custom preview"
+                  className="w-full h-full object-contain"
+                />
+                <button
+                  type="button"
+                  onClick={() => setIsPickerOpen(true)}
+                  className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-bold transition-opacity"
+                >
+                  Đổi ảnh khác
+                </button>
+              </div>
+            ) : (
+              <div
+                onClick={() => setIsPickerOpen(true)}
+                className="w-full py-3 rounded-xl border border-dashed border-white/15 hover:border-primary-500/50 flex items-center justify-center space-x-2 text-gray-400 hover:text-white cursor-pointer transition-all bg-dark-850/40"
+              >
+                <ImageIcon className="w-4 h-4 text-primary-400" />
+                <span className="text-xs font-medium">Bấm để chọn hình ảnh minh họa phù hợp</span>
+              </div>
+            )}
           </div>
 
           {/* Instructions */}
@@ -223,6 +253,30 @@ export const CustomExerciseModal: React.FC<CustomExerciseModalProps> = ({ onClos
           </button>
         </div>
       </div>
+
+      {/* Image Picker Modal */}
+      {isPickerOpen && (
+        <ImagePickerModal
+          exercise={{
+            id: 'temp',
+            name: name || 'Bài tập mới',
+            primaryMuscle,
+            secondaryMuscles,
+            equipment,
+            difficulty,
+            instructions: [],
+            tips: [],
+            commonMistakes: [],
+            images: [],
+            createdAt: new Date().toISOString(),
+          }}
+          onSaveImage={(newUrl) => {
+            setCustomImageUrl(newUrl);
+            setIsPickerOpen(false);
+          }}
+          onClose={() => setIsPickerOpen(false)}
+        />
+      )}
     </div>
   );
 };
