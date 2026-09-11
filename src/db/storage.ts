@@ -105,7 +105,7 @@ export function setActiveProgramId(id: string): void {
   safeSetItem(STORAGE_KEYS.ACTIVE_PROGRAM_ID, id);
 }
 
-const EXERCISE_VERSION_KEY = 'gym_progress_exercise_seed_v2_svg';
+const EXERCISE_VERSION_KEY = 'gym_progress_exercise_seed_v4_gymvisual_gifs';
 
 // 4. Exercises
 export function getStoredExercises(): Exercise[] {

@@ -95,13 +95,13 @@ export const ExerciseDetailModal: React.FC<ExerciseDetailModalProps> = ({
               src={primaryImage.url}
               alt={exercise.name}
               onError={() => setImageError(true)}
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain p-2 bg-dark-950"
             />
           ) : (
             <img
               src={fallbackSvg}
               alt={exercise.name}
-              className="w-full h-full object-cover p-6"
+              className="w-full h-full object-contain p-6 bg-dark-950"
             />
           )}
 

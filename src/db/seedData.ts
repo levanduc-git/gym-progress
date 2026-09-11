@@ -137,7 +137,7 @@ export const SEED_EXERCISES: Exercise[] = [
     ],
     tips: ['Thân người càng nghiêng về trước thì cơ ngực càng được kích hoạt nhiều.'],
     commonMistakes: ['Hạ người quá sâu gây áp lực quá tải cho bao khớp vai.'],
-    images: createExerciseImages('Dips', 'Chest'),
+    images: createExerciseImages('Chest Dips', 'Chest'),
     createdAt: new Date().toISOString()
   },
   {
@@ -550,7 +550,7 @@ export const SEED_EXERCISES: Exercise[] = [
     ],
     tips: ['Dừng 1-2 giây ở điểm hạ thấp nhất để triệt tiêu năng lượng đàn hồi của gân Achilles.'],
     commonMistakes: ['Nhún nhảy nảy gót chân liên tục mà không có kiểm soát.'],
-    images: createExerciseImages('Calf Raise', 'Calves'),
+    images: createExerciseImages('Standing Calf Raise', 'Calves'),
     createdAt: new Date().toISOString()
   },
 
@@ -693,7 +693,7 @@ export const SEED_EXERCISES: Exercise[] = [
     ],
     tips: ['Tập trung vào việc cuộn xương chậu về phía rốn thay vì chỉ nhấc đùi.'],
     commonMistakes: ['Vung vẩy cơ thể lấy đà.'],
-    images: createExerciseImages('Push Up', 'Core'),
+    images: createExerciseImages('Hanging Leg Raise', 'Core'),
     createdAt: new Date().toISOString()
   },
   {
@@ -711,7 +711,7 @@ export const SEED_EXERCISES: Exercise[] = [
     ],
     tips: ['Tưởng tượng bạn đang kéo cùi chỏ về phía ngón chân để tăng độ kích hoạt cơ lõi.'],
     commonMistakes: ['Võng thắt lưng hoặc nhô mông lên cao.'],
-    images: createExerciseImages('Push Up', 'Core'),
+    images: createExerciseImages('Plank', 'Core'),
     createdAt: new Date().toISOString()
   },
   {
@@ -729,7 +729,7 @@ export const SEED_EXERCISES: Exercise[] = [
     ],
     tips: ['Không để lưng bị võng xuống sàn khi lăn ra xa.'],
     commonMistakes: ['Lăn quá xa vượt quá khả năng kiểm soát gây đau lưng dưới.'],
-    images: createExerciseImages('Push Up', 'Core'),
+    images: createExerciseImages('Ab Wheel Rollout', 'Core'),
     createdAt: new Date().toISOString()
   }
 ];

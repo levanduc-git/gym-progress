@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../../context/AppContext';
 import { MuscleGroup, EquipmentType, DifficultyLevel, Exercise } from '../../db/schema';
 import { X, Plus, Image as ImageIcon, Save, Dumbbell } from 'lucide-react';
-import { createExerciseImages, generateAccurateExerciseSvg } from '../../utils/imageProvider';
+import { createExerciseImages } from '../../utils/imageProvider';
 import { ImagePickerModal } from './ImagePickerModal';
 
 interface CustomExerciseModalProps {

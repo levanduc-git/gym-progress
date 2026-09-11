@@ -61,7 +61,7 @@ export interface ExerciseImage {
   thumbnailUrl?: string;
   fallbackSvg?: string;
   type: 'image' | 'gif' | 'svg';
-  provider: 'local' | 'unsplash' | 'wger' | 'custom';
+  provider: 'local' | 'unsplash' | 'wger' | 'custom' | 'gymvisual';
   altText: string;
 }
 
